@@ -36,7 +36,7 @@ export class JobSchedulerService {
 
   async autoBackupDatabaseToDrive() {
     schedule.scheduleJob('00 00 12 * * 0-6', async () => {
-      console.log('Database Backing up...');
+      // console.log('Database Backing up...');
       await this.dbToolsService.backupMongoDb();
     });
   }
@@ -114,7 +114,7 @@ export class JobSchedulerService {
     const jobScheduler = await this.jobSchedulerModel.find();
     const mJobScheduler = JSON.parse(JSON.stringify(jobScheduler));
 
-    console.log('mJobScheduler', mJobScheduler);
+    // console.log('mJobScheduler', mJobScheduler);
 
     if (mJobScheduler && mJobScheduler.length) {
       for (const f of mJobScheduler) {

@@ -45,6 +45,7 @@ import { PdfMakerModule } from './shared/pdf-maker/pdf-maker.module';
 import { EmailModule } from './shared/email/email.module';
 import { AppVersionModule } from './pages/app-version/app-version.module';
 import { FooterDataModule } from './pages/footer-data/footer-data.module';
+import { VendorModule } from './pages/vendor/vendor.module';
 
 @Module({
   imports: [
@@ -99,7 +100,8 @@ import { FooterDataModule } from './pages/footer-data/footer-data.module';
     PdfMakerModule,
     EmailModule,
     AppVersionModule,
-    FooterDataModule
+    FooterDataModule,
+    VendorModule,
   ],
 
   controllers: [AppController],
