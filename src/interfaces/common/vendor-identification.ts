@@ -2,6 +2,7 @@ import { Vendor } from '../user/vendor.interface';
 
 export interface VendorIdentification {
   _id?: string;
+  vendorName:string,
   idType: string;
   fullName?: string;
   nidCardNo: string;

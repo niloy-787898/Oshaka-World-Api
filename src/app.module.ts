@@ -46,6 +46,7 @@ import { EmailModule } from './shared/email/email.module';
 import { AppVersionModule } from './pages/app-version/app-version.module';
 import { FooterDataModule } from './pages/footer-data/footer-data.module';
 import { VendorModule } from './pages/vendor/vendor.module';
+import {VendorIdentificationModule} from "./pages/vendor-identification/vendor-identification.module";
 
 @Module({
   imports: [
@@ -102,6 +103,7 @@ import { VendorModule } from './pages/vendor/vendor.module';
     AppVersionModule,
     FooterDataModule,
     VendorModule,
+    VendorIdentificationModule,
   ],
 
   controllers: [AppController],
