@@ -15,7 +15,7 @@ import {
   VERSION_NEUTRAL,
 } from '@nestjs/common';
 import {AdminMetaRoles} from '../../decorator/admin-roles.decorator';
-import {AdminRoles} from '../../enum/admin-roles.enum';
+import { AdminRoles } from '../../enum/admin-roles.enum';
 import {AdminRolesGuard} from '../../guards/admin-roles.guard';
 import {AdminMetaPermissions} from '../../decorator/admin-permissions.decorator';
 import {AdminPermissions} from '../../enum/admin-permission.enum';
@@ -28,7 +28,7 @@ import {
   AddVendorIdentificationDto,
   FilterAndPaginationVendorIdentificationDto,
   OptionVendorIdentificationDto, UpdateVendorIdentificationDto
-} from "../../dto/vendor-identification.dto";
+} from '../../dto/vendor-identification.dto';
 
 @Controller('vendor-identification')
 export class VendorIdentificationController {
