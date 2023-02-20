@@ -106,7 +106,7 @@ export class VendorService {
     try {
       const vendor = (await this.vendorModel
         .findOne({ vendorName: authVendorDto.vendorName })
-        .select('password vendorName hasAccess')) as Vendor;
+        .select('password vendorName approved')) as Vendor;
 
       if (!vendor) {
         return {
@@ -115,7 +115,7 @@ export class VendorService {
         } as VendorAuthResponse;
       }
 
-      if (!vendor.hasAccess) {
+      if (!vendor.approved) {
         return {
           success: false,
           message: 'No Access for Login',
@@ -155,7 +155,7 @@ export class VendorService {
     try {
       const vendor = (await this.vendorModel
         .findOne({ vendorName: authVendorDto.vendorName })
-        .select('vendorName hasAccess')) as Vendor;
+        .select('vendorName approved')) as Vendor;
 
       if (!vendor) {
         return {
@@ -164,7 +164,7 @@ export class VendorService {
         } as VendorAuthResponse;
       }
 
-      if (!vendor.hasAccess) {
+      if (!vendor.approved) {
         return {
           success: false,
           message: 'No Access for Login',
@@ -925,6 +925,21 @@ export class VendorService {
       throw new InternalServerErrorException();
     }
   }
+
+  async getVendorListByFilter(
+    vendor: any,
+  ): Promise<ResponsePayload> {
+    try {
+        const vendors = await this.vendorModel.find(vendor).select('-password -carts -checkouts')
+        return {
+          success: true,
+          message: 'Address deleted Successfully!',
+          data:vendors
+        } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
+}
 
   //
   //   async checkVendorByPhone(vendors: Vendor): Promise<ResponsePayload>) {

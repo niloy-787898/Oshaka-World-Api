@@ -19,7 +19,7 @@ export interface Vendor {
   isEmailVerified?: boolean;
   registrationType?: string;
   registrationAt?: Date;
-  hasAccess?: boolean;
+  approved?: boolean;
   usedCoupons?: Coupon[] | string[];
   wishlists?: string[];
   carts?: Cart[] | string[];
