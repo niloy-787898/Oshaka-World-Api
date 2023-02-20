@@ -151,23 +151,6 @@ export class VendorController {
     return this.vendorService.getAllVendors(filterVendorDto, searchString);
   }
 
-  /**
-   * Get Vendor by ID
-   * Update Vendor by Id
-   * Delete Vendor by Id#
-   * resetVendorPassword()
-   */
-  @Version(VERSION_NEUTRAL)
-  @Get('/:id')
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN, AdminRoles.EDITOR)
-  @UseGuards(AdminRolesGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async getVendorById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Query(ValidationPipe) vendorSelectFieldDto: VendorSelectFieldDto,
-  ): Promise<ResponsePayload> {
-    return await this.vendorService.getVendorById(id, vendorSelectFieldDto);
-  }
 
   @Version(VERSION_NEUTRAL)
   @Put('/update-logged-in-vendor')
@@ -217,11 +200,6 @@ export class VendorController {
 
   @Version(VERSION_NEUTRAL)
   @Put('/update-data/:id')
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.EDIT)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
   @UsePipes(ValidationPipe)
   async updateVendorById(
     @Param('id', MongoIdValidationPipe) id: string,
@@ -299,5 +277,34 @@ export class VendorController {
     @GetVendor() vendor: Vendor,
   ): Promise<ResponsePayload> {
     return await this.vendorService.deleteAddressById(id, vendor);
+  }
+
+  @Version(VERSION_NEUTRAL)
+  @Post('/get-vendor-list-by-filter')
+  async getVendorListByFilter(
+    @Body() data:any
+  ): Promise<ResponsePayload> {
+    return await this.vendorService.getVendorListByFilter(data);
+  }
+
+
+
+
+
+
+  
+  /**
+   * Get Vendor by ID
+   * Update Vendor by Id
+   * Delete Vendor by Id#
+   * resetVendorPassword()
+   */
+  @Version(VERSION_NEUTRAL)
+  @Get('/:id')
+  async getVendorById(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Query(ValidationPipe) vendorSelectFieldDto: VendorSelectFieldDto,
+  ): Promise<ResponsePayload> {
+    return await this.vendorService.getVendorById(id, vendorSelectFieldDto);
   }
 }

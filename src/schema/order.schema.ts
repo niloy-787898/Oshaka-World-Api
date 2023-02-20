@@ -51,6 +51,11 @@ export const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    vendors: [{
+      type: Schema.Types.ObjectId,
+      ref: "Vendor",
+      required: false
+    }],
     deliveryCharge: {
       type: Number,
       required: true,
