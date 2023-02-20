@@ -42,3 +42,9 @@ export interface UserJwtPayload {
   _id?: string;
   username: string;
 }
+
+export interface VendorJwtPayload {
+  _id?: string;
+  vendorName: string;
+}
+

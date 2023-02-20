@@ -235,8 +235,8 @@ export class VendorIdentificationService {
 
   async getUserVendorIdentificationById(id: string, select: string): Promise<ResponsePayload> {
     try {
-      const data = await this.vendorIdentificationModel.findById(id).select(select);
-      console.log('data', data);
+      const data = await this.vendorIdentificationModel.findOne({vendor: id});
+
       return {
         success: true,
         message: 'Success',

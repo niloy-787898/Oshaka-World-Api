@@ -4,10 +4,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PASSPORT_USER_TOKEN_TYPE } from '../core/global-variables';
+import { PASSPORT_VENDOR_TOKEN_TYPE } from '../core/global-variables';
 
 @Injectable()
-export class VendorJwtAuthGuard extends AuthGuard(PASSPORT_USER_TOKEN_TYPE) {
+export class VendorJwtAuthGuard extends AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE) {
+  
   canActivate(context: ExecutionContext) {
     // Add your custom authentication logic here
     // for example, call super.logIn(request) to establish a session.
@@ -19,7 +20,6 @@ export class VendorJwtAuthGuard extends AuthGuard(PASSPORT_USER_TOKEN_TYPE) {
     if (err || !vendor) {
       throw err || new UnauthorizedException();
     }
-    // console.log('user', user);
     return vendor;
   }
 }

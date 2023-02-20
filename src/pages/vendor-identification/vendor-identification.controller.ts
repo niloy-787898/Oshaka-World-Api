@@ -86,20 +86,10 @@ export class VendorIdentificationController {
     return this.vendorIdentificationService.getAllVendorIdentifications(filterVendorIdentificationDto, searchString);
   }
 
-  @Version(VERSION_NEUTRAL)
-  @Get('/:id')
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async getVendorIdentificationById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Query() select: string,
-  ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.getVendorIdentificationById(id, select);
-  }
+  
 
   @Version(VERSION_NEUTRAL)
-  @Get('/get-vendor-identification-data')
+  @Get('/get-vendor-identification-data/:id')
   @UsePipes(ValidationPipe)
   async getUserVendorIdentificationById(
     @Param('id', MongoIdValidationPipe) id: string,
@@ -179,5 +169,18 @@ export class VendorIdentificationController {
       data.ids,
       Boolean(checkUsage),
     );
+  }
+
+
+  @Version(VERSION_NEUTRAL)
+  @Get('/:id')
+  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN)
+  @UseGuards(AdminRolesGuard)
+  @UseGuards(AdminJwtAuthGuard)
+  async getVendorIdentificationById(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Query() select: string,
+  ): Promise<ResponsePayload> {
+    return await this.vendorIdentificationService.getVendorIdentificationById(id, select);
   }
 }
