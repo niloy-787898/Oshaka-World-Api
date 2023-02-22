@@ -29,6 +29,11 @@ import {
   FilterAndPaginationVendorIdentificationDto,
   OptionVendorIdentificationDto, UpdateVendorIdentificationDto
 } from "../../dto/vendor-identification.dto";
+import { PASSPORT_VENDOR_TOKEN_TYPE } from 'src/core/global-variables';
+import { AuthGuard } from '@nestjs/passport';
+import { VendorJwtAuthGuard } from 'src/guards/vendor-jwt-auth.guard';
+import { GetVendor } from 'src/decorator/get-user.decorator';
+import { Vendor } from 'src/interfaces/user/vendor.interface';
 
 @Controller('vendor-identification')
 export class VendorIdentificationController {
@@ -41,12 +46,6 @@ export class VendorIdentificationController {
    * insertManyVendorIdentification
    */
   @Post('/add-vendor-identification-data')
-  @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.CREATE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
   async addVendorIdentification(
     @Body()
     addVendorIdentificationDto: AddVendorIdentificationDto,
@@ -89,13 +88,15 @@ export class VendorIdentificationController {
   
 
   @Version(VERSION_NEUTRAL)
-  @Get('/get-vendor-identification-data/:id')
+  @Get('/get-vendor-identification-data')
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
+  @UseGuards(VendorJwtAuthGuard)
   async getUserVendorIdentificationById(
-    @Param('id', MongoIdValidationPipe) id: string,
     @Query() select: string,
+    @GetVendor() vendor: Vendor,
   ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.getUserVendorIdentificationById(id, select);
+    return await this.vendorIdentificationService.getUserVendorIdentificationById(vendor._id, select);
   }
 
   /**
@@ -103,13 +104,7 @@ export class VendorIdentificationController {
    * updateMultipleVendorIdentificationById
    */
   @Version(VERSION_NEUTRAL)
-  @Put('/update-vendor-identification-data')
-  @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.EDIT)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
+  @Put('/update-vendor-identification-data/:id')
   async updateVendorIdentificationById(
     @Param('id', MongoIdValidationPipe) id: string,
     @Body() updateVendorIdentificationDto: UpdateVendorIdentificationDto,

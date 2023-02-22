@@ -126,7 +126,7 @@ export class VendorService {
         _id: vendor._id,
         vendorName: vendor.vendorName,
       };
-      console.log(payload);
+
       const accessToken = this.jwtService.sign(payload);
       return {
         success: true,

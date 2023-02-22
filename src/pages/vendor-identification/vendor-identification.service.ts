@@ -40,13 +40,7 @@ export class VendorIdentificationService {
    * insertManyVendorIdentification
    */
   async addVendorIdentification(addVendorIdentificationDto: AddVendorIdentificationDto): Promise<ResponsePayload> {
-    const { name } = addVendorIdentificationDto;
-
-    const defaultData = {
-      slug: this.utilsService.transformToSlug(name),
-    };
-    const mData = { ...addVendorIdentificationDto, ...defaultData };
-    const newData = new this.vendorIdentificationModel(mData);
+    const newData = new this.vendorIdentificationModel(addVendorIdentificationDto);
     try {
       const saveData = await newData.save();
       const data = {

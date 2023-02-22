@@ -222,6 +222,10 @@ export class ProductService {
       filter['category._id'] = new ObjectId(filter['category._id']);
     }
 
+    if (filter && filter['vendor']) {
+      filter['vendor'] = new ObjectId(filter['vendor']);
+    }
+
     if (filter && filter['subCategory._id']) {
       filter['subCategory._id'] = new ObjectId(filter['subCategory._id']);
     }

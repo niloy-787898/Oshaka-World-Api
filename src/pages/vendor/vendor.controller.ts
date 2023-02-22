@@ -108,6 +108,7 @@ export class VendorController {
   @Version(VERSION_NEUTRAL)
   @Get('/logged-in-vendor-data')
   @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
+  @UseGuards(VendorJwtAuthGuard)
   async getLoggedInVendorData(
     @Query(ValidationPipe) vendorSelectFieldDto: VendorSelectFieldDto,
     @GetVendor() vendor: Vendor,

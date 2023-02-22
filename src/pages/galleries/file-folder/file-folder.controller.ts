@@ -43,11 +43,6 @@ export class FileFolderController {
    */
   @Post('/add')
   @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.CREATE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
   async addFileFolder(
     @Body()
     addFileFolderDto: AddFileFolderDto,
