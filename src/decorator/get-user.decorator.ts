@@ -12,6 +12,10 @@ export const GetUser = createParamDecorator(
 export const GetVendor = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): Vendor => {
     const request = ctx.switchToHttp().getRequest();
+    if(!request?.vendor){
+      return null
+    }
+
     return request.vendor;
   },
 );
