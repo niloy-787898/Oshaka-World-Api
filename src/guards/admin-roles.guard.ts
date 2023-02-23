@@ -23,10 +23,13 @@ export class AdminRolesGuard implements CanActivate {
     let user;
     // *Important* When the user jwt strategy get data from request.user
     // *Important* When the admin jwt strategy get data from request.admin
+    
     if (request.admin) {
       user = request.admin;
     } else if (request.user) {
       user = request.user;
+    }else if(request.vendor){
+      user = request.vendor;
     } else {
       user = undefined;
     }

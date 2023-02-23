@@ -41,6 +41,7 @@ import { AdminAuthResponse } from '../../interfaces/admin/admin.interface';
 import { Cache } from 'cache-manager';
 import { UtilsService } from '../../shared/utils/utils.service';
 import { OtpService } from '../otp/otp.service';
+import { VendorIdentification } from 'src/interfaces/common/vendor-identification';
 
 const ObjectId = Types.ObjectId;
 
@@ -53,13 +54,12 @@ export class VendorService {
 
   constructor(
     @InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
-    @InjectModel('Address') private readonly addressModel: Model<Vendor>,
     protected jwtService: JwtService,
     private configService: ConfigService,
     private utilsService: UtilsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     protected otpService: OtpService,
-  ) {}
+  ) { }
 
   /**
    * Vendor Signup
@@ -67,7 +67,7 @@ export class VendorService {
    * Vendor Signup & Login
    * checkVendorForRegistration()
    */
-  async vendorSignup(createVendorDto: CreateVendorDto): Promise<Vendor> {
+  async vendorSignup(createVendorDto: CreateVendorDto): Promise<ResponsePayload> {
     const { password } = createVendorDto;
     const salt = await bcrypt.genSalt();
     const hashedPass = await bcrypt.hash('password', salt);
@@ -76,7 +76,6 @@ export class VendorService {
       ...createVendorDto,
       ...{ password: hashedPass, vendorName: createVendorDto.phoneNo },
     };
-    console.log('data', mData);
     const newVendor = new this.vendorModel(mData);
     try {
       const saveData = await newVendor.save();
@@ -87,11 +86,8 @@ export class VendorService {
       return {
         success: true,
         message: 'Success',
-        vendorName: saveData.vendorName,
-        _id: saveData._id,
-        name: saveData.name,
-        fullName: saveData.fullName,
-      } as Vendor;
+        data: saveData._id
+      } as ResponsePayload;
     } catch (error) {
       console.log(error);
       if (error.code && error.code.toString() === ErrorCodes.UNIQUE_FIELD) {
@@ -379,15 +375,6 @@ export class VendorService {
     }
     this.logger.log('Not a Cached page');
 
-    // Modify Id as Object ID
-    if (filter && filter['designation._id']) {
-      filter['designation._id'] = new ObjectId(filter['designation._id']);
-    }
-
-    if (filter && filter['vendorType._id']) {
-      filter['vendorType._id'] = new ObjectId(filter['vendorType._id']);
-    }
-
     // Essential Variables
     const aggregateStages = [];
     let mFilter = {};
@@ -404,11 +391,7 @@ export class VendorService {
         $and: [
           mFilter,
           {
-            $or: [
-              { vendorName: { $regex: searchQuery, $options: 'i' } },
-              { phoneNo: { $regex: searchQuery, $options: 'i' } },
-              { name: { $regex: searchQuery, $options: 'i' } },
-            ],
+            $or: [{ vendorName: { $regex: searchQuery, $options: 'i' } }],
           },
         ],
       };
@@ -829,142 +812,4 @@ export class VendorService {
     }
   }
 
-  /**
-   * Address control
-   * addNewAddress()
-   * updateAddressById()
-   */
-
-  async addNewAddress(
-    vendor: Vendor,
-    addAddressDto: AddAddressDto,
-  ): Promise<ResponsePayload> {
-    try {
-      const final = { ...addAddressDto, ...{ vendor: vendor._id } };
-      const newAddress = new this.addressModel(final);
-      const address = await newAddress.save();
-
-      await this.vendorModel.findOneAndUpdate(
-        { _id: vendor._id },
-        { $push: { addresses: address._id } },
-      );
-
-      return {
-        success: true,
-        message: 'Address added successfully',
-        data: addAddressDto,
-      } as ResponsePayload;
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async updateAddressById(
-    id: string,
-    updateAddressDto: UpdateAddressDto,
-  ): Promise<ResponsePayload> {
-    try {
-      await this.addressModel.updateOne(
-        { _id: id },
-        { $set: updateAddressDto },
-      );
-
-      return {
-        success: true,
-        message: 'Address updated Successfully!',
-      } as ResponsePayload;
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async getAllAddress(vendor: Vendor): Promise<ResponsePayload> {
-    try {
-      const data = await this.vendorModel
-        .findOne({ _id: vendor._id })
-        .select('addresses -_id')
-        .populate({
-          path: 'addresses',
-          model: 'Address',
-          options: {
-            sort: { createdAt: -1 },
-          },
-        });
-
-      return {
-        success: true,
-        message: 'Address Get Successfully!',
-        data:
-          data && data['addresses'] && data['addresses'].length
-            ? data['addresses']
-            : [],
-      } as ResponsePayload;
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async deleteAddressById(
-    id: string,
-    vendor: Vendor,
-  ): Promise<ResponsePayload> {
-    try {
-      await this.addressModel.deleteOne({ _id: id });
-
-      await this.vendorModel.findByIdAndUpdate(
-        { _id: vendor._id },
-        { $pull: { addresses: id } },
-      );
-
-      return {
-        success: true,
-        message: 'Address deleted Successfully!',
-      } as ResponsePayload;
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async getVendorListByFilter(
-    vendor: any,
-  ): Promise<ResponsePayload> {
-    try {
-        const vendors = await this.vendorModel.find(vendor).select('-password -carts -checkouts')
-        return {
-          success: true,
-          message: 'Address deleted Successfully!',
-          data:vendors
-        } as ResponsePayload;
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
-}
-
-  //
-  //   async checkVendorByPhone(vendors: Vendor): Promise<ResponsePayload>) {
-  //   const phoneNo = req.params.phoneNo;
-  //
-  //   try {
-  //
-  //   if (await Vendor.findOne({vendorName: phoneNo})) {
-  //   res.status(200).json({
-  //                          data: true,
-  //                          message: 'Check Your Phone & Enter OTP Below!'
-  //                        });
-  // } else {
-  //   res.status(200).json({
-  //     data: false,
-  //     message: 'No Account Exists With This Phone Number!'
-  //   });
-  // }
-  //
-  // } catch (err) {
-  //   if (!err.statusCode) {
-  //     err.statusCode = 500;
-  //     err.message = 'Something went wrong on database operation!'
-  //   }
-  //
-  // }
-  // }
 }
