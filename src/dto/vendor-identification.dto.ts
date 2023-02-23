@@ -17,7 +17,7 @@ import { PaginationDto } from './pagination.dto';
 export class AddVendorIdentificationDto {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  fullName: string;
 }
 
 

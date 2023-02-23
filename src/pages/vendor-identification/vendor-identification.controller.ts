@@ -45,12 +45,15 @@ export class VendorIdentificationController {
    * addVendorIdentification
    * insertManyVendorIdentification
    */
-  @Post('/add-vendor-identification-data')
+  @Post('/add-vendor-identification-data')  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
+  @UseGuards(VendorJwtAuthGuard)
   async addVendorIdentification(
+    @GetVendor() vendor: Vendor,
     @Body()
     addVendorIdentificationDto: AddVendorIdentificationDto,
   ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.addVendorIdentification(addVendorIdentificationDto);
+    return await this.vendorIdentificationService.addVendorIdentification(vendor._id ,addVendorIdentificationDto);
   }
 
   @Post('/insert-many')

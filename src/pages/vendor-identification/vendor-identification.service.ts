@@ -39,7 +39,8 @@ export class VendorIdentificationService {
    * addVendorIdentification
    * insertManyVendorIdentification
    */
-  async addVendorIdentification(addVendorIdentificationDto: AddVendorIdentificationDto): Promise<ResponsePayload> {
+  async addVendorIdentification(id ,addVendorIdentificationDto: AddVendorIdentificationDto): Promise<ResponsePayload> {
+    addVendorIdentificationDto={...addVendorIdentificationDto,...{vendor:id}};
     const newData = new this.vendorIdentificationModel(addVendorIdentificationDto);
     try {
       const saveData = await newData.save();
@@ -73,7 +74,7 @@ export class VendorIdentificationService {
       return {
         ...m,
         ...{
-          slug: this.utilsService.transformToSlug(m.name),
+          slug: this.utilsService.transformToSlug(m.fullName),
         },
       };
     });
@@ -229,8 +230,10 @@ export class VendorIdentificationService {
 
   async getUserVendorIdentificationById(id: string, select: string): Promise<ResponsePayload> {
     try {
-      const data = await this.vendorIdentificationModel.findOne({vendor: id});
-
+      const data = await this.vendorIdentificationModel.findOne({vendor: new ObjectId(id)});
+      console.log(data);
+      console.log( id);
+      
       return {
         success: true,
         message: 'Success',
