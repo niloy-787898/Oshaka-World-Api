@@ -45,12 +45,15 @@ export class VendorIdentificationController {
    * addVendorIdentification
    * insertManyVendorIdentification
    */
-  @Post('/add-vendor-identification-data')
+  @Post('/add-vendor-identification-data')  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
+  @UseGuards(VendorJwtAuthGuard)
   async addVendorIdentification(
+    @GetVendor() vendor: Vendor,
     @Body()
     addVendorIdentificationDto: AddVendorIdentificationDto,
   ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.addVendorIdentification(addVendorIdentificationDto);
+    return await this.vendorIdentificationService.addVendorIdentification(vendor._id ,addVendorIdentificationDto);
   }
 
   @Post('/insert-many')
@@ -105,6 +108,7 @@ export class VendorIdentificationController {
    */
   @Version(VERSION_NEUTRAL)
   @Put('/update-vendor-identification-data/:id')
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
   async updateVendorIdentificationById(
     @Param('id', MongoIdValidationPipe) id: string,
     @Body() updateVendorIdentificationDto: UpdateVendorIdentificationDto,
@@ -112,70 +116,4 @@ export class VendorIdentificationController {
     return await this.vendorIdentificationService.updateVendorIdentificationById(id, updateVendorIdentificationDto);
   }
 
-  @Version(VERSION_NEUTRAL)
-  @Put('/update-multiple')
-  @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.EDIT)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async updateMultipleVendorIdentificationById(
-    @Body() updateVendorIdentificationDto: UpdateVendorIdentificationDto,
-  ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.updateMultipleVendorIdentificationById(
-      updateVendorIdentificationDto.ids,
-      updateVendorIdentificationDto,
-    );
-  }
-
-  /**
-   * deleteVendorIdentificationById
-   * deleteMultipleVendorIdentificationById
-   */
-  @Version(VERSION_NEUTRAL)
-  @Delete('/delete/:id')
-  @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.DELETE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async deleteVendorIdentificationById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Query('checkUsage') checkUsage: boolean,
-  ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.deleteVendorIdentificationById(id, Boolean(checkUsage));
-  }
-
-  @Version(VERSION_NEUTRAL)
-  @Post('/delete-multiple')
-  @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.DELETE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async deleteMultipleVendorIdentificationById(
-    @Body() data: { ids: string[] },
-    @Query('checkUsage') checkUsage: boolean,
-  ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.deleteMultipleVendorIdentificationById(
-      data.ids,
-      Boolean(checkUsage),
-    );
-  }
-
-
-  @Version(VERSION_NEUTRAL)
-  @Get('/:id')
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @UseGuards(AdminJwtAuthGuard)
-  async getVendorIdentificationById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Query() select: string,
-  ): Promise<ResponsePayload> {
-    return await this.vendorIdentificationService.getVendorIdentificationById(id, select);
-  }
 }

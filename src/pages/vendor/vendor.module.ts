@@ -33,8 +33,6 @@ import { VendorSchema } from '../../schema/vendor.scema';
     }),
     MongooseModule.forFeature([
       { name: 'Vendor', schema: VendorSchema },
-      { name: 'PromoOffer', schema: PromoOfferSchema },
-      { name: 'Product', schema: ProductSchema },
       { name: 'Otp', schema: OtpSchema },
       { name: 'Address', schema: AddressSchema },
     ]),

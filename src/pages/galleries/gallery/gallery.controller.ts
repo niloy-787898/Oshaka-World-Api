@@ -73,6 +73,7 @@ export class GalleryController {
     @Body() filterGalleryDto: FilterAndPaginationGalleryDto,
     @Query('q') searchString: string,
   ): Promise<ResponsePayload> {
+    console.log(filterGalleryDto);
     return this.galleryService.getAllGalleries(filterGalleryDto, searchString);
   }
 
