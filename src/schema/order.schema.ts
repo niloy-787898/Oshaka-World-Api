@@ -18,6 +18,7 @@ export const OrderSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    
     email: {
       type: String,
       required: false,

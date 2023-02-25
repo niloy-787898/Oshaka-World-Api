@@ -1,3 +1,4 @@
+import { Vendor } from './../../../interfaces/user/vendor.interface';
 import {
   BadRequestException,
   ConflictException,
@@ -348,6 +349,31 @@ export class OrderService {
     return this.getAllOrders(filterOrderDto, searchQuery);
   }
 
+  async getAllOrdersByVendor(
+    vendor:Vendor,
+    filterOrderDto: FilterAndPaginationOrderDto,
+    searchQuery?: string,
+  ): Promise<ResponsePayload> {
+    const { filter } = filterOrderDto;
+
+    let mFilter;
+
+    if (filter) {
+      mFilter = { ...{ vendor: new ObjectId(vendor._id) }, ...filter };
+    } else {
+      mFilter = { user: new ObjectId(vendor._id) };
+    }
+
+    filterOrderDto.filter = mFilter;
+
+    return this.getAllOrders(filterOrderDto, searchQuery);
+  }
+
+
+
+
+
+
   async getOrderById(id: string, select: string): Promise<ResponsePayload> {
     try {
       const data = await this.orderModel.findById(id).select(select);
@@ -360,6 +386,23 @@ export class OrderService {
       throw new InternalServerErrorException(err.message);
     }
   }
+
+  
+
+  async getAllOrdersOfVendor(id: string, select: string): Promise<ResponsePayload> {
+    try {
+      const data = await this.orderModel.findById(id).select(select);
+      return {
+        success: true,
+        message: 'Success',
+        data,
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+
 
   /**
    * updateOrderById
