@@ -144,10 +144,6 @@ export class OrderController {
     );
   }
 
-  //router.post("/get-all-orders-by-vendor", checkVendorAuth, controller.getAllOrdersByVendor);
-
-
-
   @Version(VERSION_NEUTRAL)
   @Get('/:id')
   async getOrderById(
@@ -156,7 +152,6 @@ export class OrderController {
   ): Promise<ResponsePayload> {
     return await this.orderService.getOrderById(id, select);
   }
-
 
   @Version(VERSION_NEUTRAL)
   @Get('/:id')

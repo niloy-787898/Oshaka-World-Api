@@ -350,7 +350,7 @@ export class OrderService {
   }
 
   async getAllOrdersByVendor(
-    vendor:Vendor,
+    vendor: Vendor,
     filterOrderDto: FilterAndPaginationOrderDto,
     searchQuery?: string,
   ): Promise<ResponsePayload> {
@@ -369,11 +369,6 @@ export class OrderService {
     return this.getAllOrders(filterOrderDto, searchQuery);
   }
 
-
-
-
-
-
   async getOrderById(id: string, select: string): Promise<ResponsePayload> {
     try {
       const data = await this.orderModel.findById(id).select(select);
@@ -387,9 +382,10 @@ export class OrderService {
     }
   }
 
-  
-
-  async getAllOrdersOfVendor(id: string, select: string): Promise<ResponsePayload> {
+  async getAllOrdersOfVendor(
+    id: string,
+    select: string,
+  ): Promise<ResponsePayload> {
     try {
       const data = await this.orderModel.findById(id).select(select);
       return {
@@ -401,8 +397,6 @@ export class OrderService {
       throw new InternalServerErrorException(err.message);
     }
   }
-
-
 
   /**
    * updateOrderById

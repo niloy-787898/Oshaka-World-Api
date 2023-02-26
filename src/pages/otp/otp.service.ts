@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { AddOtpDto, ValidateOtpDto } from '../../dto/otp.dto';
+
 import { UtilsService } from '../../shared/utils/utils.service';
 import { ResponsePayload } from '../../interfaces/core/response-payload.interface';
 import { Otp } from '../../interfaces/common/otp.interface';
-import {BulkSmsService} from '../../shared/bulk-sms/bulk-sms.service';
+import { BulkSmsService } from '../../shared/bulk-sms/bulk-sms.service';
+import { AddOtpDto, ValidateOtpDto } from '../../dto/otp.dto';
 
 const ObjectId = Types.ObjectId;
 
