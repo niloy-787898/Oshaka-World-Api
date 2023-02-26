@@ -21,7 +21,6 @@ import {
   UpdateCouponDto,
 } from '../../../dto/coupon.dto';
 import { Product } from '../../../interfaces/common/product.interface';
-import { AddOtpDto } from '../../../dto/vendor-payment.dto';
 import { User } from '../../../interfaces/user/user.interface';
 
 const ObjectId = Types.ObjectId;

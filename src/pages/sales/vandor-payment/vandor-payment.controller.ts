@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
+  Logger, Param,
   Post,
   Query,
   UseGuards,
@@ -18,10 +18,10 @@ import { AdminMetaPermissions } from '../../../decorator/admin-permissions.decor
 import { AdminPermissions } from '../../../enum/admin-permission.enum';
 import { AdminPermissionGuard } from '../../../guards/admin-permission.guard';
 import { AdminJwtAuthGuard } from '../../../guards/admin-jwt-auth.guard';
-
 import { ResponsePayload } from '../../../interfaces/core/response-payload.interface';
 import { VandorPaymentService } from './vandor-payment.service';
 import { AddVandorPaymentDto } from '../../../dto/vendor-payment.dto';
+import {MongoIdValidationPipe} from "../../../pipes/mongo-id-validation.pipe";
 
 @Controller('shipping-charge')
 export class VandorPaymentController {
@@ -50,8 +50,10 @@ export class VandorPaymentController {
   }
 
   @Version(VERSION_NEUTRAL)
-  @Get('/get')
-  async getVandorPayment(@Query() select: string): Promise<ResponsePayload> {
-    return await this.vandorPaymentService.getVandorPayment(select);
+  @Get('/get/:id')
+  async getVandorPayment(
+    @Param('id', MongoIdValidationPipe) id: string,
+  ): Promise<ResponsePayload> {
+    return await this.vandorPaymentService.getVandorPayment(id);
   }
 }

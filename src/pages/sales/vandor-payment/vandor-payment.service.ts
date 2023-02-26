@@ -76,9 +76,11 @@ export class VandorPaymentService {
    * getVandorPaymentById
    */
 
-  async getVandorPayment(select: string): Promise<ResponsePayload> {
+  async getVandorPayment(id: string): Promise<ResponsePayload> {
     try {
-      const data = await this.vandorPaymentModel.findOne({}).select(select);
+      const data = await this.vandorPaymentModel
+        .find({ vendor: id })
+        .populate('paymentBy');
       return {
         success: true,
         message: 'Success',
