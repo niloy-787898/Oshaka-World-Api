@@ -1,3 +1,4 @@
+import { Vendor } from './../../../interfaces/user/vendor.interface';
 import {
   Body,
   Controller,
@@ -33,6 +34,7 @@ import { ResponsePayload } from '../../../interfaces/core/response-payload.inter
 import { MongoIdValidationPipe } from '../../../pipes/mongo-id-validation.pipe';
 import { OrderService } from './order.service';
 import { UserJwtAuthGuard } from '../../../guards/user-jwt-auth.guard';
+import { VendorJwtAuthGuard } from '../../../guards/vendor-jwt-auth.guard';
 import { GetTokenUser } from '../../../decorator/get-token-user.decorator';
 import { User } from '../../../interfaces/user/user.interface';
 
@@ -127,6 +129,25 @@ export class OrderController {
     );
   }
 
+  @Post('/get-all-orders-by-vendor')
+  @UsePipes(ValidationPipe)
+  @UseGuards(VendorJwtAuthGuard)
+  async getAllOrdersByVendor(
+    @GetTokenUser() vendor: Vendor,
+    @Body() filterOrderDto: FilterAndPaginationOrderDto,
+    @Query('q') searchString: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllOrdersByVendor(
+      vendor,
+      filterOrderDto,
+      searchString,
+    );
+  }
+
+  //router.post("/get-all-orders-by-vendor", checkVendorAuth, controller.getAllOrdersByVendor);
+
+
+
   @Version(VERSION_NEUTRAL)
   @Get('/:id')
   async getOrderById(
@@ -134,6 +155,16 @@ export class OrderController {
     @Query() select: string,
   ): Promise<ResponsePayload> {
     return await this.orderService.getOrderById(id, select);
+  }
+
+
+  @Version(VERSION_NEUTRAL)
+  @Get('/:id')
+  async getAllOrdersOfVendor(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Query() select: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllOrdersOfVendor(id, select);
   }
 
   /**
