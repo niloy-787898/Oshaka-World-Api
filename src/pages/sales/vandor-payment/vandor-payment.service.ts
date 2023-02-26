@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -10,7 +11,10 @@ import { ConfigService } from '@nestjs/config';
 import { UtilsService } from '../../../shared/utils/utils.service';
 import { ResponsePayload } from '../../../interfaces/core/response-payload.interface';
 import { ErrorCodes } from '../../../enum/error-code.enum';
-import { AddVandorPaymentDto } from '../../../dto/vendor-payment.dto';
+import {
+  AddVandorPaymentDto,
+  UpdateVandorPaymentDto,
+} from '../../../dto/vendor-payment.dto';
 import { VendorPayment } from '../../../interfaces/common/vendor-payment';
 
 const ObjectId = Types.ObjectId;
@@ -30,7 +34,7 @@ export class VandorPaymentService {
    * addVandorPayment
    * insertManyVandorPayment
    */
-  async addVandorPayment(
+  async makeVendorPayment(
     addVandorPaymentDto: AddVandorPaymentDto,
   ): Promise<ResponsePayload> {
     try {
@@ -85,6 +89,54 @@ export class VandorPaymentService {
         success: true,
         message: 'Success',
         data,
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async changePaymentStatusById(
+    id: string,
+    updateVandorPaymentDto: UpdateVandorPaymentDto,
+  ): Promise<ResponsePayload> {
+    let data;
+    try {
+      data = await this.vandorPaymentModel.findById(id);
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+    if (!data) {
+      throw new NotFoundException('No Data found!');
+    }
+    try {
+      const finalData = { ...updateVandorPaymentDto };
+      await this.vandorPaymentModel.findByIdAndUpdate(id, {
+        $set: finalData,
+      });
+      return {
+        success: true,
+        message: 'Success',
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async deleteVendorPaymentById(id: string): Promise<ResponsePayload> {
+    let data;
+    try {
+      data = await this.vandorPaymentModel.findById(id);
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+    if (!data) {
+      throw new NotFoundException('No Data found!');
+    }
+    try {
+      await this.vandorPaymentModel.findByIdAndDelete(id);
+      return {
+        success: true,
+        message: 'Success',
       } as ResponsePayload;
     } catch (err) {
       throw new InternalServerErrorException(err.message);

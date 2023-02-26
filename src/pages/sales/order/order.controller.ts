@@ -145,21 +145,44 @@ export class OrderController {
   }
 
   @Version(VERSION_NEUTRAL)
+  @Get('/get-all-vendor-orders-by-admin/:vendorId')
+  async getAllVendorOrdersByAdmin(
+    @Param('id', MongoIdValidationPipe) vendorId: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllVendorOrdersByAdmin(vendorId);
+  }
+
+  @Version(VERSION_NEUTRAL)
+  @Get('/get-all-orders-of-vendor/:vendorId')
+  async getAllOrdersOfVendor(
+    @Param('id', MongoIdValidationPipe) vendorId: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllOrdersOfVendor(vendorId);
+  }
+
+  @Version(VERSION_NEUTRAL)
+  @Get('/get-all-transactions-by-vendor')
+  async getAllTransactionByVendor(
+    @Param('id', MongoIdValidationPipe) vendorId: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllTransactionByVendor(vendorId);
+  }
+
+  @Version(VERSION_NEUTRAL)
+  @Get('/get-all-vendor-transactions-by-admin/:vendorId')
+  async getAllVendorTransactionByAdmin(
+    @Param('id', MongoIdValidationPipe) vendorId: string,
+  ): Promise<ResponsePayload> {
+    return await this.orderService.getAllVendorTransactionByAdmin(vendorId);
+  }
+
+  @Version(VERSION_NEUTRAL)
   @Get('/:id')
   async getOrderById(
     @Param('id', MongoIdValidationPipe) id: string,
     @Query() select: string,
   ): Promise<ResponsePayload> {
     return await this.orderService.getOrderById(id, select);
-  }
-
-  @Version(VERSION_NEUTRAL)
-  @Get('/:id')
-  async getAllOrdersOfVendor(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Query() select: string,
-  ): Promise<ResponsePayload> {
-    return await this.orderService.getAllOrdersOfVendor(id, select);
   }
 
   /**

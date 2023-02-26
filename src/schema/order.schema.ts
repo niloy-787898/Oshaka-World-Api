@@ -18,7 +18,7 @@ export const OrderSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    
+
     email: {
       type: String,
       required: false,
@@ -52,11 +52,13 @@ export const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    vendors: [{
-      type: Schema.Types.ObjectId,
-      ref: "Vendor",
-      required: false
-    }],
+    vendors: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Vendor',
+        required: false,
+      },
+    ],
     deliveryCharge: {
       type: Number,
       required: true,

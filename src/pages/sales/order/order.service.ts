@@ -349,26 +349,6 @@ export class OrderService {
     return this.getAllOrders(filterOrderDto, searchQuery);
   }
 
-  async getAllOrdersByVendor(
-    vendor: Vendor,
-    filterOrderDto: FilterAndPaginationOrderDto,
-    searchQuery?: string,
-  ): Promise<ResponsePayload> {
-    const { filter } = filterOrderDto;
-
-    let mFilter;
-
-    if (filter) {
-      mFilter = { ...{ vendor: new ObjectId(vendor._id) }, ...filter };
-    } else {
-      mFilter = { user: new ObjectId(vendor._id) };
-    }
-
-    filterOrderDto.filter = mFilter;
-
-    return this.getAllOrders(filterOrderDto, searchQuery);
-  }
-
   async getOrderById(id: string, select: string): Promise<ResponsePayload> {
     try {
       const data = await this.orderModel.findById(id).select(select);
@@ -382,12 +362,32 @@ export class OrderService {
     }
   }
 
-  async getAllOrdersOfVendor(
-    id: string,
-    select: string,
+  async getAllOrdersByVendor(
+    vendor: Vendor,
+    filterOrderDto: FilterAndPaginationOrderDto,
+    searchQuery?: string,
   ): Promise<ResponsePayload> {
+    const { filter } = filterOrderDto;
+
+    let mFilter;
+
+    if (filter) {
+      mFilter = { ...{ vendor: new ObjectId(vendor._id) }, ...filter };
+    } else {
+      mFilter = { vendor: new ObjectId(vendor._id) };
+    }
+
+    filterOrderDto.filter = mFilter;
+
+    return this.getAllOrders(filterOrderDto, searchQuery);
+  }
+
+  async getAllOrdersOfVendor(vendorId: string): Promise<ResponsePayload> {
     try {
-      const data = await this.orderModel.findById(id).select(select);
+      const data = await this.orderModel.find({
+        vendors: vendorId,
+        paymentStatus: 'unpaid',
+      });
       return {
         success: true,
         message: 'Success',
@@ -398,6 +398,63 @@ export class OrderService {
     }
   }
 
+  async getAllVendorOrdersByAdmin(vendorId: string): Promise<ResponsePayload> {
+    try {
+      const data = await this.orderModel.find({
+        vendors: vendorId,
+        paymentStatus: 'unpaid',
+      });
+      return {
+        success: true,
+        message: 'Success',
+        data,
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async getAllTransactionByVendor(vendorId: string): Promise<ResponsePayload> {
+    try {
+      const data = await this.orderModel.find({
+        $and: [
+          {
+            $or: [{ deliveryStatus: 5 }, { paymentStatus: 'paid' }],
+          },
+          { vendors: vendorId },
+        ],
+      });
+      return {
+        success: true,
+        message: 'Success',
+        data,
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async getAllVendorTransactionByAdmin(
+    vendorId: string,
+  ): Promise<ResponsePayload> {
+    try {
+      const data = await this.orderModel.find({
+        $and: [
+          {
+            $or: [{ deliveryStatus: 5 }, { paymentStatus: 'paid' }],
+          },
+          { vendors: vendorId },
+        ],
+      });
+      return {
+        success: true,
+        message: 'Success',
+        data,
+      } as ResponsePayload;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
   /**
    * updateOrderById
    * updateMultipleOrderById
