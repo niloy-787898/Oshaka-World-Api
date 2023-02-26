@@ -38,7 +38,7 @@ import { AdminRolesGuard } from '../../guards/admin-roles.guard';
 import { AdminMetaPermissions } from '../../decorator/admin-permissions.decorator';
 import { AdminPermissions } from '../../enum/admin-permission.enum';
 import { AdminPermissionGuard } from '../../guards/admin-permission.guard';
-import { PASSPORT_USER_TOKEN_TYPE } from '../../core/global-variables';
+import { PASSPORT_VENDOR_TOKEN_TYPE } from '../../core/global-variables';
 import {
   Vendor,
   VendorAuthResponse,
@@ -107,7 +107,8 @@ export class VendorController {
    */
   @Version(VERSION_NEUTRAL)
   @Get('/logged-in-vendor-data')
-  @UseGuards(AuthGuard(PASSPORT_USER_TOKEN_TYPE))
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
+  @UseGuards(VendorJwtAuthGuard)
   async getLoggedInVendorData(
     @Query(ValidationPipe) vendorSelectFieldDto: VendorSelectFieldDto,
     @GetVendor() vendor: Vendor,
@@ -118,13 +119,6 @@ export class VendorController {
     );
   }
 
-  @Version(VERSION_NEUTRAL)
-  @Get('/get-vendor-address')
-  @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard(PASSPORT_USER_TOKEN_TYPE))
-  async getAllAddress(@GetVendor() vendor: Vendor): Promise<ResponsePayload> {
-    return await this.vendorService.getAllAddress(vendor);
-  }
   /**
    * Get All Vendors (Not Recommended)
    * Get All Vendors V1 (Filter, Pagination, Select)
@@ -155,7 +149,7 @@ export class VendorController {
   @Version(VERSION_NEUTRAL)
   @Put('/update-logged-in-vendor')
   @UsePipes(ValidationPipe)
-  @UseGuards(AuthGuard(PASSPORT_USER_TOKEN_TYPE))
+  @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
   async updateLoggedInVendorInfo(
     @GetVendor() vendor: Vendor,
     @Body() updateVendorDto: UpdateVendorDto,
@@ -169,7 +163,7 @@ export class VendorController {
   // @Version(VERSION_NEUTRAL)
   // @Put('/change-logged-in-vendor-password')
   // @UsePipes(ValidationPipe)
-  // @UseGuards(AuthGuard(PASSPORT_USER_TOKEN_TYPE))
+  // @UseGuards(AuthGuard(PASSPORT_VENDOR_TOKEN_TYPE))
   // async changeLoggedInVendorPassword(
   //   @GetVendor() vendor: Vendor,
   //   @Body() changePasswordDto: ChangePasswordDto,
@@ -238,59 +232,6 @@ export class VendorController {
       Boolean(checkUsage),
     );
   }
-
-  /**
-   * Address
-   * addNewAddress()
-   * updateAddressById()
-   * deleteAddressById()
-   */
-
-  @Version(VERSION_NEUTRAL)
-  @Post('/add-address')
-  @UsePipes(ValidationPipe)
-  @UseGuards(VendorJwtAuthGuard)
-  async addNewAddress(
-    @GetVendor() vendor: Vendor,
-    @Body() addAddressDto: AddAddressDto,
-  ): Promise<ResponsePayload> {
-    return await this.vendorService.addNewAddress(vendor, addAddressDto);
-  }
-
-  @Version(VERSION_NEUTRAL)
-  @Put('/edit-address/:id')
-  @UsePipes(ValidationPipe)
-  @UseGuards(VendorJwtAuthGuard)
-  async updateAddressById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @Body() updateAddressDto: UpdateAddressDto,
-  ): Promise<ResponsePayload> {
-    return await this.vendorService.updateAddressById(id, updateAddressDto);
-  }
-
-  @Version(VERSION_NEUTRAL)
-  @Delete('/delete-address/:id')
-  @UsePipes(ValidationPipe)
-  @UseGuards(VendorJwtAuthGuard)
-  async deleteAddressById(
-    @Param('id', MongoIdValidationPipe) id: string,
-    @GetVendor() vendor: Vendor,
-  ): Promise<ResponsePayload> {
-    return await this.vendorService.deleteAddressById(id, vendor);
-  }
-
-  @Version(VERSION_NEUTRAL)
-  @Post('/get-vendor-list-by-filter')
-  async getVendorListByFilter(
-    @Body() data:any
-  ): Promise<ResponsePayload> {
-    return await this.vendorService.getVendorListByFilter(data);
-  }
-
-
-
-
-
 
   
   /**

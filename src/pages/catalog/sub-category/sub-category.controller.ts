@@ -115,9 +115,6 @@ export class SubCategoryController {
 
   @Version(VERSION_NEUTRAL)
   @Get('/get-all-by-parent/:id')
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN, AdminRoles.ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @UseGuards(AdminJwtAuthGuard)
   async getSubCategoriesByCategoryId(
     @Param('id', MongoIdValidationPipe) id: string,
     @Query('select') select: string,

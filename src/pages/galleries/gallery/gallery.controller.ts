@@ -43,11 +43,6 @@ export class GalleryController {
    */
   @Post('/add')
   @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.CREATE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
   async addGallery(
     @Body()
     addGalleryDto: AddGalleryDto,
@@ -57,11 +52,6 @@ export class GalleryController {
 
   @Post('/insert-many')
   @UsePipes(ValidationPipe)
-  @AdminMetaRoles(AdminRoles.SUPER_ADMIN)
-  @UseGuards(AdminRolesGuard)
-  @AdminMetaPermissions(AdminPermissions.CREATE)
-  @UseGuards(AdminPermissionGuard)
-  @UseGuards(AdminJwtAuthGuard)
   async insertManyGallery(
     @Body()
     body: {
@@ -83,6 +73,7 @@ export class GalleryController {
     @Body() filterGalleryDto: FilterAndPaginationGalleryDto,
     @Query('q') searchString: string,
   ): Promise<ResponsePayload> {
+    console.log(filterGalleryDto);
     return this.galleryService.getAllGalleries(filterGalleryDto, searchString);
   }
 

@@ -231,6 +231,10 @@ export const ProductSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    vendor: {
+      type: Schema.Types.ObjectId,
+      ref: 'Vendor'
+    },
   },
   {
     versionKey: false,

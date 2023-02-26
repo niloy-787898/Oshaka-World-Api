@@ -81,6 +81,8 @@ export class GalleryService {
     });
     try {
       const saveData = await this.galleryModel.insertMany(mData);
+      console.log(saveData);
+      
       return {
         success: true,
         message: `${

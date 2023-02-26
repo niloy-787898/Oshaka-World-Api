@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtVendorStrategy } from './jwt-vendor.strategy';
-import { PASSPORT_USER_TOKEN_TYPE } from '../../core/global-variables';
+import { PASSPORT_VENDOR_TOKEN_TYPE } from '../../core/global-variables';
 import { AddressSchema } from '../../schema/address.schema';
 import { OtpService } from '../otp/otp.service';
 import { OtpSchema } from '../../schema/otp.schema';
@@ -17,7 +17,7 @@ import { VendorSchema } from '../../schema/vendor.scema';
 @Module({
   imports: [
     PassportModule.register({
-      defaultStrategy: PASSPORT_USER_TOKEN_TYPE,
+      defaultStrategy: PASSPORT_VENDOR_TOKEN_TYPE,
       property: 'vendor',
       session: false,
     }),
@@ -33,8 +33,6 @@ import { VendorSchema } from '../../schema/vendor.scema';
     }),
     MongooseModule.forFeature([
       { name: 'Vendor', schema: VendorSchema },
-      { name: 'PromoOffer', schema: PromoOfferSchema },
-      { name: 'Product', schema: ProductSchema },
       { name: 'Otp', schema: OtpSchema },
       { name: 'Address', schema: AddressSchema },
     ]),

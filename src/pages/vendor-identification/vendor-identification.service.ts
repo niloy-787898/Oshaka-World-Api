@@ -39,14 +39,9 @@ export class VendorIdentificationService {
    * addVendorIdentification
    * insertManyVendorIdentification
    */
-  async addVendorIdentification(addVendorIdentificationDto: AddVendorIdentificationDto): Promise<ResponsePayload> {
-    const { name } = addVendorIdentificationDto;
-
-    const defaultData = {
-      slug: this.utilsService.transformToSlug(name),
-    };
-    const mData = { ...addVendorIdentificationDto, ...defaultData };
-    const newData = new this.vendorIdentificationModel(mData);
+  async addVendorIdentification(id ,addVendorIdentificationDto: AddVendorIdentificationDto): Promise<ResponsePayload> {
+    addVendorIdentificationDto={...addVendorIdentificationDto,...{vendor:id}};
+    const newData = new this.vendorIdentificationModel(addVendorIdentificationDto);
     try {
       const saveData = await newData.save();
       const data = {
@@ -79,7 +74,7 @@ export class VendorIdentificationService {
       return {
         ...m,
         ...{
-          slug: this.utilsService.transformToSlug(m.name),
+          slug: this.utilsService.transformToSlug(m.fullName),
         },
       };
     });
@@ -221,8 +216,8 @@ export class VendorIdentificationService {
 
   async getVendorIdentificationById(id: string, select: string): Promise<ResponsePayload> {
     try {
-      const data = await this.vendorIdentificationModel.findById(id).select(select);
-      console.log('data', data);
+      const data = await this.vendorIdentificationModel.findById({vendor: id}).select(select);
+      
       return {
         success: true,
         message: 'Success',
@@ -235,8 +230,10 @@ export class VendorIdentificationService {
 
   async getUserVendorIdentificationById(id: string, select: string): Promise<ResponsePayload> {
     try {
-      const data = await this.vendorIdentificationModel.findById(id).select(select);
-      console.log('data', data);
+      const data = await this.vendorIdentificationModel.findOne({vendor: new ObjectId(id)});
+      console.log(data);
+      console.log( id);
+      
       return {
         success: true,
         message: 'Success',

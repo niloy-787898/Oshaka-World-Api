@@ -464,56 +464,49 @@ export class OrderService {
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.shipped.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.ReadToPrint) {
+        } else if (orderStatus === OrderStatus.ReadToPrint) {
           orderTimeline.ReadToPrint = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.ReadToPrint.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.PrintInvoice) {
+        } else if (orderStatus === OrderStatus.PrintInvoice) {
           orderTimeline.PrintInvoice = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.PrintInvoice.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.ReadyToPackaging) {
+        } else if (orderStatus === OrderStatus.ReadyToPackaging) {
           orderTimeline.ReadyToPackaging = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.ReadyToPackaging.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.Packaging) {
+        } else if (orderStatus === OrderStatus.Packaging) {
           orderTimeline.Packaging = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.Packaging.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.ReadyToShipped) {
+        } else if (orderStatus === OrderStatus.ReadyToShipped) {
           orderTimeline.ReadyToShipped = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.ReadyToShipped.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.HoldInvoice) {
+        } else if (orderStatus === OrderStatus.HoldInvoice) {
           orderTimeline.HoldInvoice = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.HoldInvoice.expectedDate,
           };
-        } 
-        else if (orderStatus === OrderStatus.DELIVERED) {
+        } else if (orderStatus === OrderStatus.DELIVERED) {
           orderTimeline.delivered = {
             success: true,
             date: this.utilsService.getLocalDateTime(),
             expectedDate: data.orderTimeline.delivered.expectedDate,
           };
-          
+
           if (!orderTimeline.confirmed.success) {
             orderTimeline.confirmed = {
               success: true,
