@@ -75,7 +75,7 @@ export const UserSchema = new mongoose.Schema(
 
     isPhoneVerified: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     isEmailVerified: {
       type: Boolean,
